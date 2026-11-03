@@ -9,7 +9,7 @@ Cuando DOC-03 apruebe el modelo, el equipo agregará migraciones con el formato
 La fecha y hora (en UTC) evita que dos ramas usen la misma versión. `<modulo>` es el módulo en minúsculas
 (`bfa`) o `comun` para las tablas generales. Spring Boot las empaqueta desde esta carpeta (ver `backend/pom.xml`).
 
-- Cada tarea crea en su PR solo las tablas que usa. La base común (catálogo de tests) la crea GEN-07-BE.
+- Cada tarea crea en su PR solo las tablas que usa. Las tablas comunes (catálogo de tests) se fusionan antes que las que dependen de ellas.
 - Si una migración usa tablas de otra con fecha posterior, antes de fusionar se renombra con la fecha y hora actuales.
 - No editar ni borrar migraciones ya fusionadas: el CI lo rechaza. Los errores se corrigen con otra migración compatible.
 - Las migraciones no cargan datos; las pruebas crean sus propios datos ficticios.
