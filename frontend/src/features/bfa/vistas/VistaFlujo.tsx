@@ -286,6 +286,7 @@ function VistaEjecucion({
             letra={estado.letraInicial ?? ''}
             maxEntradas={subprueba.maximoEntradas ?? 75}
             palabras={estado.palabras}
+            guardado={estado.guardado}
             onChange={controlador.escribirPalabras}
           />
         }

@@ -580,10 +580,33 @@ button {
   border: 1px solid var(--test-line);
 }
 
-.fluidez-entrada {
+.fluidez-lista li {
   display: flex;
   align-items: baseline;
+  gap: 0.25rem;
+}
+
+.fluidez-entrada {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
   gap: 0.5rem;
+  min-width: 0;
+}
+
+.fluidez-quitar {
+  padding: 0 0.3rem;
+  color: var(--test-secondary);
+  font: inherit;
+  line-height: 1;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.fluidez-quitar:hover,
+.fluidez-quitar:focus-visible {
+  color: var(--test-ink);
 }
 
 .fluidez-numero {
