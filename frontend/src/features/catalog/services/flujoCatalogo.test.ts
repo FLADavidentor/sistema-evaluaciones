@@ -21,7 +21,8 @@ describe('flujo del catálogo (GEN-01-FE)', () => {
 
   it('solo BFA tiene ruta de inicio por ahora', () => {
     expect(rutaDeInicio('BFA')).toBe('/bfa');
-    expect(rutaDeInicio('WEILL')).toBeNull();
+    expect(rutaDeInicio('WEILL')).toBe('/weill');
+    expect(rutaDeInicio('OTRO')).toBeNull();
     expect(rutaDeInicio(undefined)).toBeNull();
   });
 });

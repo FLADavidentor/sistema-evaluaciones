@@ -9,5 +9,7 @@ export function ordenarSubpruebas(subpruebas: ConfiguracionSubprueba[] = []) {
 
 /** Ruta donde se inicia la aplicación de un test; null si ese módulo aún no existe. */
 export function rutaDeInicio(codigo: string | undefined): string | null {
-  return codigo === 'BFA' ? '/bfa' : null;
+  if (codigo === 'BFA') return '/bfa';
+  if (codigo === 'WEILL') return '/weill';
+  return null;
 }
