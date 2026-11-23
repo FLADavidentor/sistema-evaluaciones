@@ -493,6 +493,12 @@ export class BfaApiSimulada implements BfaApi {
     return this.vista(evaluacion);
   }
 
+  /** Palabras de FV registradas, por orden: insumo del E10 simulado. */
+  palabrasFv(evaluacionId: number): PalabraRegistrada[] {
+    const fv = this.buscar(evaluacionId).ejecuciones.find((e) => e.codigo === 'FV');
+    return [...(fv?.palabras ?? [])].sort((a, b) => a.ordenEntrada - b.ordenEntrada);
+  }
+
   // --- Reglas internas -------------------------------------------------------------------
 
   private config(codigo: string): SubpruebaConfig {
