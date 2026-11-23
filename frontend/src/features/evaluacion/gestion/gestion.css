@@ -1,0 +1,12 @@
+/* Estilos de GEN-02-FE (gestión y panel); reutiliza ev-* de evaluacion.css. */
+
+.gestion-aparte {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--test-line);
+}
+
+.gestion-filtro {
+  max-width: 14rem;
+  margin-bottom: 1rem;
+}
