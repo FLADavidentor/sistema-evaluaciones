@@ -1,4 +1,6 @@
 import { ApiError } from '../../../services/http';
+import { MATERIAL_ESPACIAL } from '../espacial/material';
+import { MATERIAL_VERBAL } from '../verbal/material';
 import type { BfaApi } from './bfaApi';
 import type {
   AvanceSubpruebaResponse,
@@ -164,6 +166,7 @@ const EJEMPLOS_R2: [string, string[]][] = [
 ];
 
 const EJEMPLOS_POR_SUBPRUEBA: Record<string, [string, string[]][]> = {
+  ...MATERIAL_VERBAL,
   R1: EJEMPLOS_R1,
   R2: EJEMPLOS_R2,
 };
@@ -570,17 +573,27 @@ export class BfaApiSimulada implements BfaApi {
     const base = config.codigo === 'VOC2' ? 40 : 0;
     const letras = 'ABCDE'.slice(0, config.opciones ?? 0).split('');
     const ejemplos = EJEMPLOS_POR_SUBPRUEBA[config.codigo];
+    const figuras = MATERIAL_ESPACIAL[config.codigo];
     return Array.from({ length: config.numeroPreguntas }, (_, i) => {
       const numero = base + i + 1;
       const id = config.orden * 1000 + numero;
       const ejemplo = ejemplos?.[i % ejemplos.length];
+      const figura = figuras?.[i % figuras.length];
       return {
         id,
         numero,
-        enunciado: ejemplo ? ejemplo[0] : `Pregunta de ejemplo ${numero} (${config.codigo})`,
+        enunciado: ejemplo
+          ? ejemplo[0]
+          : (figura?.enunciado ?? `Pregunta de ejemplo ${numero} (${config.codigo})`),
+        ...(figura ? { recursoUrl: figura.estimulo } : {}),
         opciones: letras.map((letra, j) => ({
           letra,
-          texto: ejemplo ? (ejemplo[1][j] ?? '') : `Alternativa ${letra}`,
+          texto: ejemplo
+            ? (ejemplo[1][j] ?? '')
+            : figura
+              ? `Figura ${letra}`
+              : `Alternativa ${letra}`,
+          ...(figura ? { recursoUrl: figura.opciones[j] } : {}),
         })),
         respuestaActual: ejecucion.respuestas.get(id) ?? null,
       };

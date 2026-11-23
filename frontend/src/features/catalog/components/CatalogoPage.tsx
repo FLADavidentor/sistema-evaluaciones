@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router';
 
 import { ApiError } from '../../../services/http';
-import { listarTests, obtenerTest } from '../services/catalogoService';
+import { clienteCatalogo, type ClienteCatalogoPagina } from '../services/clienteCatalogo';
+import { ordenarSubpruebas, rutaDeInicio } from '../services/flujoCatalogo';
 
 import type { TestResumenResponse, TestDetalleResponse } from '../types/catalogo.types';
 
@@ -17,7 +19,7 @@ function obtenerMensajeError(error: unknown): string {
   return 'Ocurrió un error inesperado al consultar el catálogo.';
 }
 
-export function CatalogoPage() {
+export function CatalogoPage({ cliente = clienteCatalogo }: { cliente?: ClienteCatalogoPagina }) {
   const [tests, setTests] = useState<TestResumenResponse[]>([]);
   const [testSeleccionado, setTestSeleccionado] = useState<TestDetalleResponse | null>(null);
 
@@ -38,7 +40,7 @@ export function CatalogoPage() {
         setCargando(true);
         setError(null);
 
-        const resultado = await listarTests();
+        const resultado = await cliente.listarTests();
 
         if (activo) {
           setTests(resultado);
@@ -59,7 +61,7 @@ export function CatalogoPage() {
     return () => {
       activo = false;
     };
-  }, []);
+  }, [cliente]);
 
   // Consulta del detalle cuando se selecciona un test.
   useEffect(() => {
@@ -79,7 +81,7 @@ export function CatalogoPage() {
         setErrorDetalle(null);
         setTestSeleccionado(null);
 
-        const resultado = await obtenerTest(testId);
+        const resultado = await cliente.obtenerTest(testId);
 
         if (activo) {
           setTestSeleccionado(resultado);
@@ -100,7 +102,9 @@ export function CatalogoPage() {
     return () => {
       activo = false;
     };
-  }, [testIdSeleccionado]);
+  }, [cliente, testIdSeleccionado]);
+
+  const rutaInicio = rutaDeInicio(testSeleccionado?.codigo);
 
   return (
     <section className="catalog-page">
@@ -190,13 +194,21 @@ export function CatalogoPage() {
                   Versión de formulario: {testSeleccionado.versionFormularioId ?? 'No disponible'}
                 </p>
 
-                <h3>Subpruebas</h3>
+                {rutaInicio && (
+                  <Link className="catalog-start" to={rutaInicio}>
+                    Iniciar evaluación
+                  </Link>
+                )}
+
+                <h3>Subpruebas (orden de aplicación)</h3>
 
                 {testSeleccionado.subpruebas?.length ? (
-                  <ul className="catalog-subtests">
-                    {testSeleccionado.subpruebas.map((subprueba, index) => (
+                  <ol className="catalog-subtests">
+                    {ordenarSubpruebas(testSeleccionado.subpruebas).map((subprueba, index) => (
                       <li key={`${subprueba.codigo ?? 'subprueba'}-${index}`}>
-                        <strong>{subprueba.nombre ?? 'Sin nombre'}</strong>
+                        <strong>
+                          {subprueba.orden ?? index + 1}. {subprueba.nombre ?? 'Sin nombre'}
+                        </strong>
 
                         <span>Código: {subprueba.codigo ?? 'N/D'}</span>
 
@@ -207,7 +219,7 @@ export function CatalogoPage() {
                         <span>Número de preguntas: {subprueba.numeroPreguntas ?? 'N/D'}</span>
                       </li>
                     ))}
-                  </ul>
+                  </ol>
                 ) : (
                   <p className="catalog-message">Este test no tiene subpruebas registradas.</p>
                 )}
