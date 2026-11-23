@@ -1,0 +1,41 @@
+/* BFA · flujo general ------------------------------------------------------------------ */
+
+.test-footer.test-footer--solo {
+  justify-content: flex-end;
+}
+
+.bfa-orden {
+  display: grid;
+  gap: 0.35rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: subprueba;
+}
+
+.bfa-orden li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0.1rem;
+  border-bottom: 1px solid var(--test-line);
+  counter-increment: subprueba;
+}
+
+.bfa-orden li::before {
+  flex: 0 0 1.75rem;
+  color: var(--test-secondary);
+  font-size: 0.86rem;
+  content: counter(subprueba);
+}
+
+.bfa-orden li > span:first-child {
+  flex: 1;
+}
+
+.bfa-orden-tiempo {
+  color: var(--test-secondary);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+}

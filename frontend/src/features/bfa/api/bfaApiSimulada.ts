@@ -143,6 +143,31 @@ const CATALOGO: Omit<SubpruebaConfig, 'numeroPreguntas' | 'tienePractica' | 'max
   },
 ];
 
+// Material FICTICIO de ejemplo para desarrollar y probar R1 y R2. No son reactivos del BFA ni
+// llevan clave: E6 nunca devuelve la respuesta correcta. DOC-08 definirá el material de ejercicios.
+const EJEMPLOS_R1: [string, string[]][] = [
+  ['2, 4, 8, 16, ___', ['20', '24', '32', '64']],
+  ['5, 10, 15, 20, ___', ['22', '25', '30', '35']],
+  ['1, 4, 9, 16, ___', ['20', '24', '25', '36']],
+  ['100, 90, 80, 70, ___', ['50', '55', '60', '65']],
+  ['3, 6, 5, 10, 9, ___', ['12', '14', '18', '20']],
+  ['1, 2, 4, 7, 11, ___', ['14', '15', '16', '18']],
+];
+
+const EJEMPLOS_R2: [string, string[]][] = [
+  ['A, C, E, G, ___', ['H', 'I', 'J', 'K']],
+  ['frío : calor :: noche : ___', ['día', 'sol', 'luna', 'hora']],
+  ['Pie es a zapato como mano es a ___', ['guante', 'dedo', 'brazo', 'anillo']],
+  ['Z, X, V, T, ___', ['S', 'R', 'Q', 'P']],
+  ['grande : pequeño :: alto : ___', ['bajo', 'ancho', 'largo', 'corto']],
+  ['Ojo es a ver como oído es a ___', ['oír', 'sonido', 'oreja', 'ruido']],
+];
+
+const EJEMPLOS_POR_SUBPRUEBA: Record<string, [string, string[]][]> = {
+  R1: EJEMPLOS_R1,
+  R2: EJEMPLOS_R2,
+};
+
 export interface OpcionesApiSimulada {
   /** Reloj inyectable; por defecto `Date.now`. */
   ahora?: () => number;
@@ -544,14 +569,19 @@ export class BfaApiSimulada implements BfaApi {
   private preguntas(config: SubpruebaConfig, ejecucion: EjecucionSimulada): Pregunta[] {
     const base = config.codigo === 'VOC2' ? 40 : 0;
     const letras = 'ABCDE'.slice(0, config.opciones ?? 0).split('');
+    const ejemplos = EJEMPLOS_POR_SUBPRUEBA[config.codigo];
     return Array.from({ length: config.numeroPreguntas }, (_, i) => {
       const numero = base + i + 1;
       const id = config.orden * 1000 + numero;
+      const ejemplo = ejemplos?.[i % ejemplos.length];
       return {
         id,
         numero,
-        enunciado: `Pregunta de ejemplo ${numero} (${config.codigo})`,
-        opciones: letras.map((letra) => ({ letra, texto: `Alternativa ${letra}` })),
+        enunciado: ejemplo ? ejemplo[0] : `Pregunta de ejemplo ${numero} (${config.codigo})`,
+        opciones: letras.map((letra, j) => ({
+          letra,
+          texto: ejemplo ? (ejemplo[1][j] ?? '') : `Alternativa ${letra}`,
+        })),
         respuestaActual: ejecucion.respuestas.get(id) ?? null,
       };
     });

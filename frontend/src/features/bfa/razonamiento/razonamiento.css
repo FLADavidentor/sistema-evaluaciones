@@ -1,0 +1,71 @@
+/* Razonamiento A y B: tipografía que no distorsiona números, letras ni símbolos.
+   Serif con cifras de altura uniforme, sin ligaduras ni mayúsculas forzadas. */
+
+.razon {
+  font-family: 'Times New Roman', Times, serif;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-variant-ligatures: none;
+  font-feature-settings:
+    'liga' 0,
+    'clig' 0;
+  text-transform: none;
+  hyphens: none;
+}
+
+.razon-serie,
+.razon-analogia,
+.razon-texto {
+  display: block;
+  text-align: center;
+}
+
+.razon-serie {
+  font-size: clamp(1.7rem, 5.5vw, 2.5rem);
+  line-height: 1.5;
+}
+
+.razon-serie--numerica {
+  letter-spacing: 0.02em;
+}
+
+.razon-item {
+  white-space: nowrap;
+}
+
+.razon-analogia {
+  font-size: clamp(1.4rem, 4.5vw, 2rem);
+  line-height: 1.6;
+}
+
+.razon-grupo,
+.razon-par {
+  white-space: nowrap;
+}
+
+.razon-analogia--frase .razon-clausula,
+.razon-analogia--frase .razon-conector {
+  display: block;
+}
+
+.razon-conector {
+  margin: 0.15em 0;
+  font-style: italic;
+}
+
+.razon-texto {
+  font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+.razon-opcion {
+  font-size: 1.15rem;
+}
+
+.razon-hueco {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.12em;
+  border: 2px solid currentColor;
+}
