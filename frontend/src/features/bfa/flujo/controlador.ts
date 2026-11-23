@@ -285,7 +285,8 @@ export class ControladorBfa {
 
   private async retomar(codigo: string, evaluacion: EvaluacionResponse) {
     const config = this.config(codigo);
-    const segundos = evaluacion.subpruebaActiva?.segundosRestantes ?? config.tiempoLimiteSegundos;
+    const segundos =
+      evaluacion.subpruebaActiva?.segundosRestantes ?? config.tiempoLimiteSegundos ?? 0;
     if (segundos <= 0) {
       this.entrarEnCierre(config);
       return;
