@@ -155,3 +155,25 @@
 .weill-datos dd {
   margin: 0;
 }
+
+.weill-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.weill-tabla th,
+.weill-tabla td {
+  padding: 0.45rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--test-line);
+}
+
+.weill-tabla th {
+  font-weight: 400;
+  color: var(--test-secondary);
+}
+
+.weill-sin-valor {
+  font-style: italic;
+  color: var(--test-secondary);
+}
