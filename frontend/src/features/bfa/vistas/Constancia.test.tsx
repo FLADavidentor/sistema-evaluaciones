@@ -19,10 +19,10 @@ describe('Constancia (GEN-04-FE)', () => {
     </MemoryRouter>,
   );
 
-  it('muestra los datos del cierre y enlaza a los resultados', () => {
+  it('muestra los datos del cierre sin enlazar a los resultados', () => {
     expect(html).toContain('Evaluación finalizada');
     expect(html).toContain('N.º 15');
-    expect(html).toContain('href="/evaluaciones/15/resultados"');
+    expect(html).not.toContain('/resultados');
     expect(html).toContain('pendiente de validación');
   });
 

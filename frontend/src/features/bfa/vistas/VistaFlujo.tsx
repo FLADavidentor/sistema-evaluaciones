@@ -1,4 +1,3 @@
-import { Link } from 'react-router';
 import { AnswerOption } from '../../../components/AnswerOption';
 import { Figura } from '../components/Figura';
 import { FluidezVerbal } from '../components/FluidezVerbal';
@@ -234,9 +233,6 @@ export function Constancia({
           </>
         )}
       </dl>
-      <Link className="bfa-enlace" to={`/evaluaciones/${estado.evaluacionId}/resultados`}>
-        Consultar resultados (personal autorizado)
-      </Link>
     </HojaSimple>
   );
 }
