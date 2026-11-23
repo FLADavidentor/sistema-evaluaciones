@@ -50,6 +50,14 @@ export interface ConfiguracionSubprueba {
   tienePractica: boolean;
 }
 
+/** E1 — un test activo del catálogo. */
+export interface TestResumenResponse {
+  id: number;
+  codigo: string;
+  nombre: string;
+  numeroSubpruebas: number;
+}
+
 export interface TestDetalleResponse {
   id: number;
   codigo: string;
@@ -146,6 +154,12 @@ export interface ClienteEvaluacion {
   obtenerSujeto(sujetoId: number): Promise<SujetoResponse>;
   iniciarEvaluacion(solicitud: IniciarEvaluacionRequest): Promise<EvaluacionResponse>;
   obtenerEvaluacion(evaluacionId: number): Promise<EvaluacionResponse>;
+}
+
+/** Puerto del catálogo (E1 y E2): lo implementan el servicio real y el mock. */
+export interface ClienteCatalogo {
+  listarTests(): Promise<TestResumenResponse[]>;
+  obtenerTest(testId: number): Promise<TestDetalleResponse>;
 }
 
 // ---------- Estado de una petición en la interfaz ----------
