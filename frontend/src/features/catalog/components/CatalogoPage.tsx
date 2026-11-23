@@ -104,7 +104,8 @@ export function CatalogoPage({ cliente = clienteCatalogo }: { cliente?: ClienteC
     };
   }, [cliente, testIdSeleccionado]);
 
-  const rutaInicio = rutaDeInicio(testSeleccionado?.codigo);
+  // El inicio depende del test elegido en E1, no de E2: un módulo puede iniciarse sin detalle publicado.
+  const rutaInicio = rutaDeInicio(tests.find((t) => t.id === testIdSeleccionado)?.codigo);
 
   return (
     <section className="catalog-page">
@@ -177,6 +178,12 @@ export function CatalogoPage({ cliente = clienteCatalogo }: { cliente?: ClienteC
               </p>
             )}
 
+            {rutaInicio && !cargandoDetalle && (
+              <Link className="catalog-start" to={rutaInicio}>
+                Iniciar evaluación
+              </Link>
+            )}
+
             {errorDetalle && (
               <div className="catalog-error" role="alert">
                 <strong>No fue posible consultar el detalle.</strong>
@@ -193,12 +200,6 @@ export function CatalogoPage({ cliente = clienteCatalogo }: { cliente?: ClienteC
                 <p className="catalog-detail-meta">
                   Versión de formulario: {testSeleccionado.versionFormularioId ?? 'No disponible'}
                 </p>
-
-                {rutaInicio && (
-                  <Link className="catalog-start" to={rutaInicio}>
-                    Iniciar evaluación
-                  </Link>
-                )}
 
                 <h3>Subpruebas (orden de aplicación)</h3>
 
