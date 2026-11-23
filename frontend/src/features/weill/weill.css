@@ -76,7 +76,7 @@
 .weill-figura {
   width: min(100%, 26rem);
   max-height: 34vh;
-  color: var(--test-ink);
+  object-fit: contain;
 }
 
 .weill-piezas {
@@ -106,7 +106,14 @@
   display: block;
   width: 100%;
   max-width: 4.5rem;
-  color: var(--test-ink);
+  height: auto;
+}
+
+.weill-credito {
+  margin: 0;
+  padding: 0 1.25rem 0.5rem;
+  color: var(--test-secondary);
+  font-size: 0.78rem;
 }
 
 .weill-estado {

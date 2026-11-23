@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router';
 import { AnswerOption } from '../../components/AnswerOption';
 import { clienteWeill } from './cliente';
-import { FiguraWeill, PiezaWeill } from './figuras';
 import { ubicarItem } from './items';
 import { mensajeError } from './mensajes';
 import {
@@ -18,7 +17,13 @@ import {
   type ItemsLocales,
 } from './respuestas';
 import { TiempoRestante } from './TiempoRestante';
-import { ITEMS_POR_LAMINA, TOTAL_ITEMS, TOTAL_PIEZAS, type IntentoWeill } from './tipos';
+import {
+  ITEMS_POR_LAMINA,
+  TOTAL_ITEMS,
+  TOTAL_PIEZAS,
+  type IntentoWeill,
+  type ItemWeill,
+} from './tipos';
 import './weill.css';
 
 type Carga =
@@ -26,14 +31,13 @@ type Carga =
   | { fase: 'error'; mensaje: string }
   | { fase: 'listo'; intento: IntentoWeill };
 
-const PIEZAS = Array.from({ length: TOTAL_PIEZAS }, (_, i) => i + 1);
-
 /** WEI-FE-03 — aplicación de los 60 ítems. Ruta: /weill/intentos/:intentoId */
 export function AplicacionWeillPagina() {
   const intentoId = Number(useParams().intentoId);
   const [carga, setCarga] = useState<Carga>({ fase: 'cargando' });
   const [items, setItems] = useState<ItemsLocales>({});
   const [orden, setOrden] = useState(1);
+  const [material, setMaterial] = useState<ItemWeill | null>(null);
   const [confirmando, setConfirmando] = useState(false);
   const [finalizando, setFinalizando] = useState(false);
   const [errorFinal, setErrorFinal] = useState<string | null>(null);
@@ -53,6 +57,17 @@ export function AplicacionWeillPagina() {
   }, [intentoId]);
 
   useEffect(cargar, [cargar]);
+
+  useEffect(() => {
+    let vigente = true;
+    clienteWeill
+      .obtenerItem(intentoId, orden)
+      .then((m) => vigente && setMaterial(m))
+      .catch(() => vigente && setMaterial(null));
+    return () => {
+      vigente = false;
+    };
+  }, [intentoId, orden]);
 
   const guardar = useCallback(
     (ordenItem: number, pieza: number | null) => {
@@ -136,7 +151,13 @@ export function AplicacionWeillPagina() {
         </div>
 
         <div className="weill-figura-marco">
-          <FiguraWeill orden={orden} />
+          {material?.orden === orden && (
+            <img
+              className="weill-figura"
+              src={material.figuraUrl}
+              alt={`Figura del ítem ${orden} con un espacio vacío`}
+            />
+          )}
         </div>
 
         <div
@@ -144,14 +165,14 @@ export function AplicacionWeillPagina() {
           role="radiogroup"
           aria-label="Piezas candidatas (teclas 1 a 8)"
         >
-          {PIEZAS.map((pieza) => (
+          {(material?.orden === orden ? material.piezas : []).map(({ pieza, url }) => (
             <AnswerOption
               key={`${orden}-${pieza}`}
               groupName={`weill-item-${orden}`}
               option={{
                 id: String(pieza),
                 label: `Pieza ${pieza}`,
-                figure: <PiezaWeill orden={orden} pieza={pieza} />,
+                figure: <img className="weill-pieza" src={url} alt="" />,
               }}
               checked={item.pieza === pieza}
               onChange={(id) => guardar(orden, Number(id))}
@@ -209,6 +230,8 @@ export function AplicacionWeillPagina() {
           </div>
         </div>
       )}
+
+      <p className="weill-credito">Material de ejemplo: MaRs-IB (CC BY-NC 3.0)</p>
 
       <footer className="test-footer">
         <EstadoItem item={item} onReintentar={() => guardar(orden, item.pieza)} />

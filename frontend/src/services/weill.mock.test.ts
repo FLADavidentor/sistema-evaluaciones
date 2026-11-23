@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { crearClienteWeillMock, type AlmacenWeill } from './weill.mock';
+import { crearClienteWeillMock, materialItem, type AlmacenWeill } from './weill.mock';
 import { servicioWeill } from './weill';
 
 const almacenEnMemoria = (): AlmacenWeill => {
@@ -100,5 +100,22 @@ describe('mock de Weill', () => {
 describe('adaptador real de Weill', () => {
   it('falla hasta que DOC-09 defina el contrato', async () => {
     await expect(servicioWeill.iniciarIntento()).rejects.toThrow('pendiente de contrato DOC-09');
+  });
+
+  it('el material baraja las 8 piezas por ítem y apunta a los archivos', () => {
+    const m = materialItem(7);
+    expect(m.figuraUrl).toBe('/material/weill/07-figura.jpg');
+    expect(m.piezas.map((p) => p.pieza)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(new Set(m.piezas.map((p) => p.url)).size).toBe(8);
+    const primera = (o: number) =>
+      materialItem(o).piezas.findIndex((p) => p.url.endsWith('-1.jpg'));
+    expect(new Set(Array.from({ length: 60 }, (_, i) => primera(i + 1))).size).toBe(8);
+  });
+
+  it('obtenerItem valida el ítem', async () => {
+    const c = cliente();
+    const { id } = await c.iniciarIntento();
+    await expect(c.obtenerItem(id, 3)).resolves.toMatchObject({ orden: 3 });
+    await expect(c.obtenerItem(id, 61)).rejects.toMatchObject({ status: 400 });
   });
 });
