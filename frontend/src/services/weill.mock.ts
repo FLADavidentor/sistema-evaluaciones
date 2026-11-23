@@ -6,6 +6,7 @@ import {
   type ClienteWeill,
   type ConstanciaWeill,
   type IntentoWeill,
+  type ItemWeill,
   type ResultadoWeill,
 } from '../features/weill/tipos';
 import { fallar } from './evaluacion.mock';
@@ -41,6 +42,17 @@ function almacenPorDefecto(): AlmacenWeill | null {
   } catch {
     return null;
   }
+}
+
+const dos = (n: number) => String(n).padStart(2, '0');
+
+/** Material MaRs-IB (public/material/weill). El archivo 1 es el correcto, pero el cliente solo ve posiciones barajadas por ítem. */
+export function materialItem(orden: number): ItemWeill {
+  const piezas = Array.from({ length: TOTAL_PIEZAS }, (_, i) => {
+    const archivo = ((i + orden * 3) % TOTAL_PIEZAS) + 1;
+    return { pieza: i + 1, url: `/material/weill/${dos(orden)}-pieza-${archivo}.jpg` };
+  });
+  return { orden, figuraUrl: `/material/weill/${dos(orden)}-figura.jpg`, piezas };
 }
 
 const copiar = <T>(valor: T): T => structuredClone(valor);
@@ -119,6 +131,13 @@ export function crearClienteWeillMock({
     async obtenerIntento(intentoId) {
       await esperar();
       return copiar(buscar(leer(), intentoId));
+    },
+
+    async obtenerItem(intentoId, orden) {
+      await esperar();
+      buscar(leer(), intentoId);
+      if (!esOrdenValido(orden)) fallar(400, 'ITEM_INVALIDO', `Ítem ${orden} inválido.`, 'weill');
+      return materialItem(orden);
     },
 
     async guardarRespuesta(intentoId, orden, pieza) {

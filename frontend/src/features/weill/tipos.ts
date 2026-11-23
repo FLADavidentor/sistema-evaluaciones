@@ -56,11 +56,19 @@ export interface ResultadoWeill {
   versionBaremo: string | null;
 }
 
+/** Material de un ítem: la figura y las 8 piezas en el orden mostrado (pieza = número 1–8). */
+export interface ItemWeill {
+  orden: number;
+  figuraUrl: string;
+  piezas: { pieza: number; url: string }[];
+}
+
 export interface ClienteWeill {
   /** Intento EN_CURSO para retomarlo, o null si no hay. */
   obtenerIntentoEnCurso(): Promise<IntentoWeill | null>;
   iniciarIntento(): Promise<IntentoWeill>;
   obtenerIntento(intentoId: number): Promise<IntentoWeill>;
+  obtenerItem(intentoId: number, orden: number): Promise<ItemWeill>;
   /** Guarda (o quita con pieza null) la respuesta de un ítem. */
   guardarRespuesta(intentoId: number, orden: number, pieza: number | null): Promise<RespuestaWeill>;
   finalizarIntento(intentoId: number): Promise<ConstanciaWeill>;

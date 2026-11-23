@@ -1,0 +1,11 @@
+Creditos del material de ejemplo
+
+Estas imagenes son items abiertos de investigacion usados como material de ejemplo.
+No son items del BFA ni de Weill, no tienen baremos ni normas y se usan en un proyecto
+de clase sin fines comerciales.
+
+weill/ - MaRs-IB (Matrix Reasoning Item Bank)
+  Chierchia, Fuhrmann et al. (2019). Royal Society Open Science.
+  https://osf.io/g96f4/
+  Licencia CC BY-NC 3.0 (https://creativecommons.org/licenses/by-nc/3.0/)
+  Figuras recortadas y comprimidas.

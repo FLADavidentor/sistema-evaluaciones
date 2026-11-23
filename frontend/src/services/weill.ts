@@ -9,6 +9,7 @@ export const servicioWeill: ClienteWeill = {
   obtenerIntentoEnCurso: async () => pendiente(),
   iniciarIntento: async () => pendiente(),
   obtenerIntento: async () => pendiente(),
+  obtenerItem: async () => pendiente(),
   guardarRespuesta: async () => pendiente(),
   finalizarIntento: async () => pendiente(),
   obtenerConstancia: async () => pendiente(),
