@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { Plantilla } from './components/Plantilla';
+import { BfaFe06Preview } from './dev/BfaFe06Preview';
 import { Ui01Preview } from './dev/Ui01Preview';
 import { Ui04Preview } from './dev/Ui04Preview';
 import { Ui05Preview } from './dev/Ui05Preview';
@@ -26,6 +27,8 @@ const router = createBrowserRouter([
   { path: 'dev/ui-01', element: <Ui01Preview /> },
   // Vista previa de UI-04: variantes visuales de las subpruebas BFA (contenido de ejemplo).
   { path: 'dev/ui-04', element: <Ui04Preview /> },
+  // Vista previa de BFA-FE-06: familia Numérico con el mock de E5/E6/E7.
+  { path: 'dev/bfa-fe-06', element: <BfaFe06Preview /> },
   // Vista previa de UI-05: diseño del perfil de resultados BFA (datos simulados).
   { path: 'dev/ui-05', element: <Ui05Preview /> },
 ]);
