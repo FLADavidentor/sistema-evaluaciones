@@ -1,5 +1,5 @@
 import { ApiError } from '../../../services/http';
-import { MATERIAL_ESPACIAL } from '../espacial/material';
+import { materialEspacial } from '../espacial/material';
 import { MATERIAL_VERBAL } from '../verbal/material';
 import type { BfaApi } from './bfaApi';
 import type {
@@ -579,7 +579,7 @@ export class BfaApiSimulada implements BfaApi {
     const base = config.codigo === 'VOC2' ? 40 : 0;
     const letras = 'ABCDE'.slice(0, config.opciones ?? 0).split('');
     const ejemplos = EJEMPLOS_POR_SUBPRUEBA[config.codigo];
-    const figuras = MATERIAL_ESPACIAL[config.codigo];
+    const figuras = materialEspacial(config.codigo);
     return Array.from({ length: config.numeroPreguntas }, (_, i) => {
       const numero = base + i + 1;
       const id = config.orden * 1000 + numero;

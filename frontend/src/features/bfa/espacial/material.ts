@@ -1,7 +1,6 @@
-import { cubos, poligono, type Punto } from './figuras';
-
-// Material FICTICIO de S1, S2 y S1b para desarrollar y probar la familia Espacial con la API
-// simulada. No son reactivos del BFA ni llevan clave (E6 nunca devuelve la respuesta correcta).
+// Material de EJEMPLO de S1, S2 y S1b: figuras 3D de Ganis y Kievit 2015 (CC BY 4.0) en
+// public/material/bfa-espacial. No son reactivos del BFA ni llevan clave (E6 nunca devuelve
+// la respuesta correcta); el orden de las alternativas se baraja de forma determinista.
 
 export interface ItemFigura {
   enunciado: string;
@@ -11,104 +10,33 @@ export interface ItemFigura {
   opciones: string[];
 }
 
-const FLECHA: Punto[] = [
-  [30, 30],
-  [70, 30],
-  [70, 18],
-  [92, 40],
-  [70, 62],
-  [70, 50],
-  [30, 50],
-];
-const ESCALON: Punto[] = [
-  [36, 18],
-  [60, 18],
-  [60, 38],
-  [84, 38],
-  [84, 62],
-  [36, 62],
-];
-const BANDERA: Punto[] = [
-  [42, 14],
-  [50, 14],
-  [50, 22],
-  [80, 30],
-  [50, 40],
-  [50, 66],
-  [42, 66],
-];
+export const CREDITO_ESPACIAL = 'Figuras: Ganis y Kievit 2015 (CC BY 4.0)';
+export const RUTA_ESPACIAL = '/material/bfa-espacial/';
 
-const IDENTICAS = 'Elige la figura idéntica al modelo.';
-const DESPLAZADA = 'Elige la figura que es el modelo girado, sin darle vuelta.';
-const LADRILLOS = 'Elige la pila de cubos igual al modelo.';
-
-export const MATERIAL_ESPACIAL: Record<string, ItemFigura[]> = {
-  S1: [
-    {
-      enunciado: IDENTICAS,
-      estimulo: poligono(ESCALON),
-      opciones: [
-        poligono(ESCALON, 0, true),
-        poligono(ESCALON),
-        poligono(FLECHA),
-        poligono(BANDERA),
-      ],
-    },
-    {
-      enunciado: IDENTICAS,
-      estimulo: poligono(BANDERA),
-      opciones: [
-        poligono(BANDERA, 180),
-        poligono(ESCALON),
-        poligono(BANDERA, 0, true),
-        poligono(BANDERA),
-      ],
-    },
-  ],
-  S2: [
-    {
-      enunciado: DESPLAZADA,
-      estimulo: poligono(FLECHA),
-      opciones: [
-        poligono(FLECHA, 90),
-        poligono(FLECHA, 0, true),
-        poligono(ESCALON, 90),
-        poligono(BANDERA, 45),
-      ],
-    },
-    {
-      enunciado: DESPLAZADA,
-      estimulo: poligono(ESCALON),
-      opciones: [
-        poligono(ESCALON, 90, true),
-        poligono(BANDERA, 180),
-        poligono(ESCALON, 180),
-        poligono(ESCALON, 0, true),
-      ],
-    },
-  ],
-  S1b: [
-    {
-      enunciado: LADRILLOS,
-      estimulo: cubos([3, 1, 2]),
-      opciones: [
-        cubos([1, 3, 2]),
-        cubos([3, 1, 2]),
-        cubos([3, 2, 1]),
-        cubos([2, 1, 3]),
-        cubos([3, 1, 1]),
-      ],
-    },
-    {
-      enunciado: LADRILLOS,
-      estimulo: cubos([1, 2, 3, 1]),
-      opciones: [
-        cubos([1, 2, 3]),
-        cubos([1, 3, 2, 1]),
-        cubos([1, 2, 3, 1]),
-        cubos([2, 2, 3, 1]),
-        cubos([1, 2, 2, 1]),
-      ],
-    },
-  ],
+const ENUNCIADO = 'Elige la figura que es el modelo girado, sin darle vuelta.';
+const ITEMS_POR_SUBPRUEBA = 4;
+const INICIO: Record<string, number> = { S1: 1, S2: 5, S1b: 9 };
+// Alternativas usadas: S1 y S2 llevan 1 (misma figura girada) y 2, 4, 5 (espejadas).
+const ARCHIVOS: Record<string, number[]> = {
+  S1: [1, 2, 4, 5],
+  S2: [1, 2, 4, 5],
+  S1b: [1, 2, 3, 4, 5],
 };
+
+const dos = (n: number) => String(n).padStart(2, '0');
+
+export function materialEspacial(codigo: string): ItemFigura[] | undefined {
+  const archivos = ARCHIVOS[codigo];
+  if (!archivos) return undefined;
+  return Array.from({ length: ITEMS_POR_SUBPRUEBA }, (_, i) => {
+    const kk = dos(INICIO[codigo] + i);
+    return {
+      enunciado: ENUNCIADO,
+      estimulo: `${RUTA_ESPACIAL}${kk}-modelo.jpg`,
+      opciones: archivos.map(
+        (_, j) =>
+          `${RUTA_ESPACIAL}${kk}-alternativa-${archivos[(j + i + 1) % archivos.length]}.jpg`,
+      ),
+    };
+  });
+}

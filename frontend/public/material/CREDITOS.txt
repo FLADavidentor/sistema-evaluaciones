@@ -9,3 +9,9 @@ weill/ - MaRs-IB (Matrix Reasoning Item Bank)
   https://osf.io/g96f4/
   Licencia CC BY-NC 3.0 (https://creativecommons.org/licenses/by-nc/3.0/)
   Figuras recortadas y comprimidas.
+
+bfa-espacial/ - Figuras 3D de rotacion mental
+  Ganis, G. y Kievit, R. (2015). Journal of Open Psychology Data.
+  https://doi.org/10.5334/jopd.ai  (figshare 1045385)
+  Licencia CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+  Figuras recortadas y comprimidas.

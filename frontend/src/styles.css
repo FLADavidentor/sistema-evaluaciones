@@ -468,6 +468,11 @@ button {
   max-width: 18rem;
 }
 
+.figura-credito {
+  color: var(--test-secondary);
+  font-size: 0.78rem;
+}
+
 .figura--marcador rect,
 .figura--marcador path {
   stroke-width: 2px;

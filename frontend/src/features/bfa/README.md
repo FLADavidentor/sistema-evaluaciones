@@ -72,7 +72,7 @@ El hueco puede ser `___`, `[ ]`, `( )`, `□` o un `?` suelto. Si el formato rea
 
 ### Espacial (BFA-FE-02)
 
-S1, S2 y S1b muestran el estímulo y las alternativas como figuras (`recursoUrl` de E6) con el diseño de UI-04: enunciado oculto y alternativas en cuadrícula. En la API simulada, `espacial/` genera figuras sintéticas **ficticias** (polígonos girados o reflejados y pilas de cubos) como data URL; no son reactivos del BFA. Verlo: `/bfa?subpruebas=S1,S2,S1b&tiempo=60`.
+S1, S2 y S1b muestran el estímulo y las alternativas como figuras (`recursoUrl` de E6) con el diseño de UI-04: enunciado oculto y alternativas en cuadrícula. En la API simulada, `espacial/` entrega figuras 3D de ejemplo de Ganis y Kievit 2015 (CC BY 4.0, en `public/material/bfa-espacial`) con alternativas barajadas; no son reactivos del BFA. Verlo: `/bfa?subpruebas=S1,S2,S1b&tiempo=60`.
 
 ### Verbal (BFA-FE-03)
 
