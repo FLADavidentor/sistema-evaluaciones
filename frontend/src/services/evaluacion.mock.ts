@@ -85,13 +85,13 @@ export const TEST_BFA: TestDetalleResponse = {
   ],
 };
 
-const SUJETOS: SujetoResponse[] = [
+export const SUJETOS: SujetoResponse[] = [
   { id: 25, identificadorInstitucional: '2026-0153', nombres: 'Ana', apellidos: 'Ruiz' },
   { id: 26, identificadorInstitucional: '2026-0154', nombres: 'Luis', apellidos: 'Pérez' },
   { id: 409, identificadorInstitucional: '2026-0409', nombres: 'Marta', apellidos: 'López' },
 ];
 
-const PERIODOS: PeriodoResponse[] = [
+export const PERIODOS: PeriodoResponse[] = [
   {
     id: 3,
     codigo: '2026-2',
@@ -118,7 +118,7 @@ const PERIODOS: PeriodoResponse[] = [
   },
 ];
 
-const evaluacionesIniciales = (): EvaluacionResponse[] => [
+export const evaluacionesIniciales = (): EvaluacionResponse[] => [
   {
     id: 15,
     testId: 1,

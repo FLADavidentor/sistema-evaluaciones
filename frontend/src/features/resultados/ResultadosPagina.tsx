@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import '../evaluacion/evaluacion.css';
 import '../bfa/perfil/perfil.css';
 import { useBfaApi } from '../bfa/api/contexto';
@@ -15,6 +15,16 @@ import './resultados.css';
 const vistaPorTest = (resultado: ResultadoResponse, datosSimulados: boolean) =>
   esResultadoBfa(resultado.factores) ? (
     <PerfilBfa resultado={resultado} datosSimulados={datosSimulados} />
+  ) : null;
+
+/** BFA-FE-09: la vista profesional enlaza con la revisión de Fluidez Verbal. */
+const accionesPorTest = (resultado: ResultadoResponse) =>
+  resultado.estadoResultado === 'PENDIENTE_VALIDACION' || esResultadoBfa(resultado.factores) ? (
+    <p>
+      <Link to={`/evaluaciones/${resultado.evaluacionId}/revision`}>
+        Revisar, recalcular y publicar
+      </Link>
+    </p>
   ) : null;
 
 /** GEN-05-FE: consulta general de resultados (E9). Sirve para cualquier test. */
@@ -43,6 +53,7 @@ export function ResultadosPagina() {
           cliente={cliente}
           datosSimulados={usaMocksResultados}
           vista={vistaPorTest}
+          acciones={accionesPorTest}
         />
       </div>
     </div>

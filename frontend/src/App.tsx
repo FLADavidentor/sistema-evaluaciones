@@ -5,6 +5,7 @@ import { BfaFe06Preview } from './dev/BfaFe06Preview';
 import { Ui01Preview } from './dev/Ui01Preview';
 import { Ui04Preview } from './dev/Ui04Preview';
 import { Ui05Preview } from './dev/Ui05Preview';
+import { SesionProveedor } from './features/acceso/SesionProveedor';
 import { rutasAcceso } from './features/acceso/rutas';
 import { rutasAdministracion } from './features/administracion/rutas';
 import { rutasBfa } from './features/bfa/rutas';
@@ -38,5 +39,9 @@ const router = createBrowserRouter([
 ]);
 
 export function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <SesionProveedor>
+      <RouterProvider router={router} />
+    </SesionProveedor>
+  );
 }
