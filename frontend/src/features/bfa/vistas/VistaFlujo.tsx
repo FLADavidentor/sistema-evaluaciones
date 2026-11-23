@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { AnswerOption } from '../../../components/AnswerOption';
 import { Figura } from '../components/Figura';
 import { FluidezVerbal } from '../components/FluidezVerbal';
@@ -165,6 +166,26 @@ export function VistaFlujo({ estado, controlador, alSalir }: VistaFlujoProps) {
           />
         );
       }
+      if (estado.confirmando) {
+        return (
+          <HojaSimple
+            nombre={NOMBRE_TEST}
+            etiqueta="Confirmación"
+            titulo="¿Finalizar la evaluación?"
+            descripcion="Al finalizar se registra el cierre y ya no se puede modificar ninguna respuesta."
+            guardado="saved"
+            accion={{ texto: 'Sí, finalizar', alPulsar: controlador.continuar }}
+          >
+            <button
+              type="button"
+              className="bfa-accion-secundaria"
+              onClick={controlador.cancelarFinalizacion}
+            >
+              Cancelar
+            </button>
+          </HojaSimple>
+        );
+      }
       return (
         <HojaSimple
           nombre={NOMBRE_TEST}
@@ -172,22 +193,52 @@ export function VistaFlujo({ estado, controlador, alSalir }: VistaFlujoProps) {
           titulo="Todas las subpruebas están cerradas"
           descripcion="Finaliza la evaluación para registrar el cierre."
           guardado="saved"
-          accion={{ texto: 'Finalizar evaluación', alPulsar: controlador.continuar }}
+          accion={{ texto: 'Finalizar evaluación', alPulsar: controlador.solicitarFinalizacion }}
         />
       );
 
     case 'finalizada':
-      return (
-        <HojaSimple
-          nombre={NOMBRE_TEST}
-          etiqueta="Evaluación"
-          titulo="Evaluación finalizada"
-          descripcion={`La evaluación quedó finalizada. ${textoResultado(estado.estadoResultado)}`}
-          guardado="saved"
-          accion={{ texto: 'Salir', alPulsar: alSalir }}
-        />
-      );
+      return <Constancia estado={estado} alSalir={alSalir} />;
   }
+}
+
+/** Constancia de finalización (GEN-04): solo datos del cierre, nunca puntuaciones. */
+export function Constancia({
+  estado,
+  alSalir,
+}: {
+  estado: Extract<EstadoFlujo, { fase: 'finalizada' }>;
+  alSalir: () => void;
+}) {
+  const fecha = estado.fechaFin ? new Date(estado.fechaFin) : null;
+  return (
+    <HojaSimple
+      nombre={NOMBRE_TEST}
+      etiqueta="Constancia"
+      titulo="Evaluación finalizada"
+      descripcion="Gracias. Tus respuestas quedaron registradas; los resultados los revisa el personal autorizado."
+      guardado="saved"
+      accion={{ texto: 'Salir', alPulsar: alSalir }}
+    >
+      <dl className="bfa-constancia">
+        <dt>Evaluación</dt>
+        <dd>N.º {estado.evaluacionId}</dd>
+        <dt>Cierre</dt>
+        <dd>{fecha && !Number.isNaN(fecha.getTime()) ? fecha.toLocaleString('es') : '—'}</dd>
+        <dt>Subpruebas aplicadas</dt>
+        <dd>{estado.subpruebasAplicadas}</dd>
+        {estado.estadoResultado && (
+          <>
+            <dt>Resultado</dt>
+            <dd>{textoResultado(estado.estadoResultado)}</dd>
+          </>
+        )}
+      </dl>
+      <Link className="bfa-enlace" to={`/evaluaciones/${estado.evaluacionId}/resultados`}>
+        Consultar resultados (personal autorizado)
+      </Link>
+    </HojaSimple>
+  );
 }
 
 function VistaEjecucion({

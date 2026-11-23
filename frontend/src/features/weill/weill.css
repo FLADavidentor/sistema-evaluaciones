@@ -1,0 +1,157 @@
+/* Weill: reutiliza el lenguaje visual de la hoja de prueba (styles.css). */
+
+.weill-panel {
+  margin: 1.5rem auto;
+}
+
+.weill-marcador {
+  margin: 0 0 1.5rem;
+  padding: 1rem;
+  border: 2px dashed var(--test-secondary);
+}
+
+.weill-marcador h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.weill-acciones {
+  display: grid;
+  justify-items: start;
+  gap: 0.75rem;
+}
+
+.weill-acciones p {
+  margin: 0;
+}
+
+.weill-error {
+  color: #a61b1b;
+}
+
+.weill-panel button:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.weill-aplicacion {
+  width: min(100%, 880px);
+  margin: 1rem auto;
+}
+
+.weill-contenido {
+  padding-block: 1rem 1.25rem;
+}
+
+.weill-ubicacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.weill-ubicacion h1 {
+  margin: 0;
+  color: var(--test-ink);
+  font-size: 1rem;
+}
+
+.weill-progreso {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--test-secondary);
+  font-size: 0.86rem;
+}
+
+.weill-figura-marco {
+  display: grid;
+  place-items: center;
+  margin-bottom: 1rem;
+}
+
+.weill-figura {
+  width: min(100%, 26rem);
+  max-height: 34vh;
+  color: var(--test-ink);
+}
+
+.weill-piezas {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+@media (min-width: 720px) {
+  .weill-piezas {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+
+.weill-piezas .answer-option {
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 0;
+  padding: 0.5rem;
+}
+
+.weill-piezas .answer-option.is-selected {
+  padding: calc(0.5rem - 1px);
+}
+
+.weill-pieza {
+  display: block;
+  width: 100%;
+  max-width: 4.5rem;
+  color: var(--test-ink);
+}
+
+.weill-estado {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.weill-aplicacion button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.weill-aplicacion button:focus-visible,
+.weill-panel button:focus-visible {
+  outline: 3px solid var(--test-secondary);
+  outline-offset: 3px;
+}
+
+.weill-confirmar {
+  margin: 0 1rem 1rem;
+  padding: 1rem;
+  border: 2px solid var(--test-ink);
+}
+
+.weill-confirmar h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.weill-confirmar p {
+  margin: 0 0 0.75rem;
+}
+
+.weill-datos {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1.25rem;
+  margin: 0;
+}
+
+.weill-datos dt {
+  color: var(--test-secondary);
+}
+
+.weill-datos dd {
+  margin: 0;
+}
