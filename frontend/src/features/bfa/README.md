@@ -78,6 +78,10 @@ S1, S2 y S1b muestran el estímulo y las alternativas como figuras (`recursoUrl`
 
 VOC1 (palabra en mayúsculas, 5 alternativas en lista), VOC2 (bloque de 5 palabras compacto, numeración 41 en adelante) y CV (sentencia y 3 interpretaciones) se dibujan con `verbal/TextoVerbal`: texto exacto, `lang="es"` y `translate="no"`. La API simulada usa palabras y sentencias **ficticias** de `verbal/material.ts`; no son reactivos del BFA. Verlo: `/bfa?subpruebas=VOC1,VOC2,CV&tiempo=60`.
 
+### Fluidez Verbal (BFA-FE-07)
+
+FV usa `components/FluidezVerbal` dentro del flujo: letra asignada siempre visible, hasta `maximoEntradas` (75) entradas, Enter pasa a la siguiente, `×` anula una palabra sin mover el orden de las demás, y el conteo distingue escritas de guardadas (E7 `{palabras}` con `ordenEntrada`). El reloj es el del servidor; al recargar se recuperan letra, palabras y tiempo. Verlo: `/bfa?subpruebas=FV&tiempo=60`.
+
 ### Contrato (DOC-05)
 
 Verificado contra `docs/api/openapi.yaml` del PR #37 (aún sin fusionar; su encabezado lo presenta como contrato aprobado). Confirmado: rutas y métodos de E1–E8 y E24; `opcion` es la letra de E6; `recursoUrl` viene en la pregunta y en cada opción; FV usa `palabras` con `ordenEntrada` en E6 y E7; estados `PENDIENTE / ACTIVA / CERRADA`; `versionFormularioId` en E2 y E4 (E3 la exige, se toma de E2); formato de error común. Las instrucciones y los ejemplos de práctica se leen de E24; mientras el backend no la implemente (`RUTA_NO_ENCONTRADA`) se usan textos provisionales, y cualquier otro error se informa.

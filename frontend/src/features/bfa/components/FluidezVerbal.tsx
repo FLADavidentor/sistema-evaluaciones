@@ -1,17 +1,29 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import type { SaveState } from '../../../components/SaveStatus';
 
 type FluidezVerbalProps = {
   /** Letra de la aplicación; la define el evaluador, no es una constante de la prueba. */
   letra: string;
   palabras: string[];
   maxEntradas?: number;
+  /** Estado del guardado (E7); con él se muestra cuántas palabras quedaron guardadas. */
+  guardado?: SaveState;
   onChange: (palabras: string[]) => void;
 };
 
 /** Grilla de entradas de Fluidez Verbal: Enter pasa a la siguiente y la letra siempre se ve. */
-export function FluidezVerbal({ letra, palabras, maxEntradas = 75, onChange }: FluidezVerbalProps) {
+export function FluidezVerbal({
+  letra,
+  palabras,
+  maxEntradas = 75,
+  guardado,
+  onChange,
+}: FluidezVerbalProps) {
   const entradas = useRef<(HTMLInputElement | null)[]>([]);
   const escritas = palabras.filter((palabra) => palabra.trim() !== '').length;
+  // Último conteo confirmado: solo cambia cuando el guardado termina bien.
+  const [guardadas, setGuardadas] = useState(escritas);
+  if (guardado === 'saved' && guardadas !== escritas) setGuardadas(escritas);
 
   const cambiar = (indice: number, valor: string) => {
     const siguiente = Array.from({ length: maxEntradas }, (_, i) => palabras[i] ?? '');
@@ -27,9 +39,15 @@ export function FluidezVerbal({ letra, palabras, maxEntradas = 75, onChange }: F
         </span>
         <div>
           <p className="fluidez-titulo">Letra asignada: {letra}</p>
-          <p className="fluidez-conteo">
+          <p className="fluidez-conteo" aria-live="polite">
             {escritas} de {maxEntradas} palabras escritas
+            {guardado && ` · ${guardadas} guardadas`}
           </p>
+          {escritas >= maxEntradas && (
+            <p className="fluidez-conteo" role="status">
+              Llegaste al máximo de {maxEntradas} palabras.
+            </p>
+          )}
         </div>
       </div>
       <ol className="fluidez-lista" aria-label="Palabras escritas">
@@ -59,6 +77,19 @@ export function FluidezVerbal({ letra, palabras, maxEntradas = 75, onChange }: F
                 }}
               />
             </label>
+            {(palabras[indice] ?? '') !== '' && (
+              <button
+                type="button"
+                className="fluidez-quitar"
+                aria-label={`Quitar palabra ${indice + 1}`}
+                onClick={() => {
+                  cambiar(indice, '');
+                  entradas.current[indice]?.focus();
+                }}
+              >
+                ×
+              </button>
+            )}
           </li>
         ))}
       </ol>
