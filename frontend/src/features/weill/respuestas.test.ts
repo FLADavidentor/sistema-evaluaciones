@@ -2,11 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   contarGuardados,
   desdeServidor,
+  hayGuardando,
   itemLocal,
   primerPendiente,
   resolver,
   solicitar,
 } from './respuestas';
+import { TOTAL_ITEMS } from './tipos';
 
 describe('estado local de respuestas Weill', () => {
   it('marca guardado solo cuando la API confirma', () => {
@@ -42,5 +44,14 @@ describe('estado local de respuestas Weill', () => {
   it('al retomar se ubica en el primer ítem sin respuesta', () => {
     expect(primerPendiente(desdeServidor({ 1: 1, 2: 3, 4: 2 }))).toBe(3);
     expect(primerPendiente({})).toBe(1);
+  });
+});
+
+describe('finalización Weill', () => {
+  it('omitidos = 60 menos los guardados y espera los guardados en curso', () => {
+    const items = solicitar(desdeServidor({ 1: 2, 2: 5 }), 3, 4);
+    expect(TOTAL_ITEMS - contarGuardados(items)).toBe(58);
+    expect(hayGuardando(items)).toBe(true);
+    expect(hayGuardando(resolver(items, 3, 4, true))).toBe(false);
   });
 });
