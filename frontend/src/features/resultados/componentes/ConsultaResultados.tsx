@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type FormEvent } from 'react';
+import { useEffect, useId, useState, type FormEvent, type ReactNode } from 'react';
 import { EstadoCarga } from '../../evaluacion/componentes/EstadoCarga';
 import { ErrorCampo } from '../../evaluacion/componentes/ErrorCampo';
 import { MensajeError } from '../../evaluacion/componentes/MensajeError';
@@ -7,7 +7,7 @@ import { validarId } from '../../evaluacion/validaciones';
 import { usaMocksResultados } from '../cliente';
 import { esNoFinalizada } from '../errores';
 import { useResultado } from '../hooks/useResultado';
-import type { ClienteResultados } from '../tipos';
+import type { ClienteResultados, ResultadoResponse } from '../tipos';
 import type { TablaFactoresProps } from './TablaFactores';
 import { VistaResultado } from './VistaResultado';
 
@@ -15,12 +15,18 @@ interface ConsultaResultadosProps extends Pick<TablaFactoresProps, 'etiquetaFact
   /** Si viene (p. ej. desde la ruta), se consulta al montar. */
   evaluacionIdInicial?: string;
   cliente?: ClienteResultados;
+  /** Por defecto, cuando se usa el mock general. */
+  datosSimulados?: boolean;
+  /** Vista específica de un test (p. ej. el perfil BFA); si devuelve null se usa la general. */
+  vista?: (resultado: ResultadoResponse, datosSimulados: boolean) => ReactNode;
 }
 
 /** Buscador por ID + estados de carga, error y resultado de E9. */
 export function ConsultaResultados({
   evaluacionIdInicial,
   cliente,
+  datosSimulados = usaMocksResultados && !cliente,
+  vista,
   etiquetaFactor,
 }: ConsultaResultadosProps) {
   const id = useId();
@@ -95,13 +101,14 @@ export function ConsultaResultados({
             onReintentar={consultado !== null ? () => void ejecutar(consultado) : undefined}
           />
         ))}
-      {estado.fase === 'exito' && (
-        <VistaResultado
-          resultado={estado.datos}
-          datosSimulados={usaMocksResultados && !cliente}
-          etiquetaFactor={etiquetaFactor}
-        />
-      )}
+      {estado.fase === 'exito' &&
+        (vista?.(estado.datos, datosSimulados) ?? (
+          <VistaResultado
+            resultado={estado.datos}
+            datosSimulados={datosSimulados}
+            etiquetaFactor={etiquetaFactor}
+          />
+        ))}
     </div>
   );
 }

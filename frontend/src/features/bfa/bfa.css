@@ -39,3 +39,40 @@
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.9rem;
 }
+
+.bfa-constancia {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1rem;
+  margin: 1rem 0;
+}
+
+.bfa-constancia dt {
+  color: var(--test-secondary);
+}
+
+.bfa-constancia dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.bfa-enlace {
+  color: var(--uam-action);
+  font-weight: 600;
+}
+
+.bfa-accion-secundaria {
+  margin-top: 1rem;
+  padding: 0.55rem 1rem;
+  color: var(--test-ink);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--test-line);
+  border-radius: 6px;
+}
+
+.bfa-enlace:focus-visible,
+.bfa-accion-secundaria:focus-visible {
+  outline: 3px solid var(--test-ink);
+  outline-offset: 2px;
+}

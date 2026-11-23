@@ -10,6 +10,7 @@ import { rutasBfa } from './features/bfa/rutas';
 import { rutasCatalogo } from './features/catalog/rutas';
 import { rutasEvaluacion } from './features/evaluacion/rutas';
 import { rutasResultados } from './features/resultados/rutas';
+import { rutasWeill } from './features/weill/rutas';
 
 // Cada módulo declara sus rutas en features/<modulo>/rutas.tsx; este archivo solo las reúne.
 const router = createBrowserRouter([
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       ...rutasResultados,
       ...rutasAcceso,
       ...rutasBfa,
+      ...rutasWeill,
     ],
   },
   // Vista previa de UI-01 (contenido demostrativo).
