@@ -61,8 +61,20 @@ export type EstadoFlujo =
       /** Esperando que el servidor confirme el cierre. */
       cerrando: boolean;
     }
-  | { fase: 'listaParaFinalizar'; finalizando: boolean }
-  | { fase: 'finalizada'; estadoResultado: string | null };
+  | {
+      fase: 'listaParaFinalizar';
+      finalizando: boolean;
+      /** Diálogo de confirmación abierto antes de enviar E8. */
+      confirmando?: boolean;
+    }
+  | {
+      fase: 'finalizada';
+      estadoResultado: string | null;
+      /** Datos de la constancia (E4/E8); nunca puntuaciones. */
+      evaluacionId: number;
+      fechaFin: string | null;
+      subpruebasAplicadas: number;
+    };
 
 const MENSAJES: Record<string, string> = {
   EVALUACION_NO_ENCONTRADA: 'No se encontró la evaluación.',
@@ -270,7 +282,13 @@ export class ControladorBfa {
   private async resolver(evaluacion: EvaluacionResponse) {
     this.evaluacion = evaluacion;
     if (evaluacion.estado === 'FINALIZADA') {
-      this.fijar({ fase: 'finalizada', estadoResultado: evaluacion.estadoResultado ?? null });
+      this.fijar({
+        fase: 'finalizada',
+        estadoResultado: evaluacion.estadoResultado ?? null,
+        evaluacionId: evaluacion.id,
+        fechaFin: evaluacion.fechaFin,
+        subpruebasAplicadas: evaluacion.subpruebas.length,
+      });
       return;
     }
     const activa = evaluacion.subpruebas.find((s) => s.estado === 'ACTIVA');
@@ -561,6 +579,15 @@ export class ControladorBfa {
   }
 
   // --- Finalización -------------------------------------------------------------------------
+
+  /** Abre o cierra la confirmación; `continuar` con la confirmación abierta envía E8. */
+  solicitarFinalizacion = () => this.confirmarCierre(true);
+  cancelarFinalizacion = () => this.confirmarCierre(false);
+
+  private confirmarCierre(confirmando: boolean) {
+    const e = this.estado;
+    if (e.fase === 'listaParaFinalizar' && !e.finalizando) this.fijar({ ...e, confirmando });
+  }
 
   private async finalizar() {
     this.fijar({ fase: 'listaParaFinalizar', finalizando: true });
