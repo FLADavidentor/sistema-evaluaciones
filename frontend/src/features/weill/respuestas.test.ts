@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  contarConError,
   contarGuardados,
   desdeServidor,
   hayGuardando,
@@ -53,5 +54,11 @@ describe('finalización Weill', () => {
     expect(TOTAL_ITEMS - contarGuardados(items)).toBe(58);
     expect(hayGuardando(items)).toBe(true);
     expect(hayGuardando(resolver(items, 3, 4, true))).toBe(false);
+  });
+
+  it('cuenta las respuestas que no se pudieron guardar', () => {
+    const fallida = resolver(solicitar({}, 4, 2), 4, 2, false);
+    expect(contarConError(fallida)).toBe(1);
+    expect(contarGuardados(fallida)).toBe(0);
   });
 });

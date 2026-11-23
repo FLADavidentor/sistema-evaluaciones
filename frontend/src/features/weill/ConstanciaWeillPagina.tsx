@@ -49,7 +49,7 @@ export function ConstanciaWeillPagina() {
               <dt>Intento</dt>
               <dd>{carga.constancia.intentoId}</dd>
               <dt>Finalizado</dt>
-              <dd>{new Date(carga.constancia.fechaFin).toLocaleString('es')}</dd>
+              <dd>{formatoFecha(carga.constancia.fechaFin)}</dd>
               <dt>Ítems respondidos</dt>
               <dd>
                 {carga.constancia.respondidos} de {TOTAL_ITEMS}
@@ -67,4 +67,10 @@ export function ConstanciaWeillPagina() {
       </div>
     </section>
   );
+}
+
+// Fecha inválida o ausente se muestra como «—» (igual que la constancia BFA).
+function formatoFecha(valor: string | null | undefined) {
+  const fecha = valor ? new Date(valor) : null;
+  return fecha && !Number.isNaN(fecha.getTime()) ? fecha.toLocaleString('es') : '—';
 }
