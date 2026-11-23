@@ -402,6 +402,33 @@ describe('casos de GEN-03 y GEN-04 sobre la interfaz', () => {
     expect(repetido.segundosRestantes).toBe(260);
   });
 
+  it('GEN-04-FE: pide confirmación antes de E8 y la constancia no trae puntuaciones', async () => {
+    const { api, id } = await evaluacionNueva({}, ['VOC1']);
+    const c = await cargado(api, id);
+    await entrar(c);
+    await vencer(c, 300);
+    c.continuar(); // transición → lista para finalizar
+    const finalizar = vi.spyOn(api, 'finalizarEvaluacion');
+    c.solicitarFinalizacion();
+    expect(c.obtenerEstado()).toMatchObject({ fase: 'listaParaFinalizar', confirmando: true });
+    c.cancelarFinalizacion();
+    expect(c.obtenerEstado()).toMatchObject({ fase: 'listaParaFinalizar', confirmando: false });
+    expect(finalizar).not.toHaveBeenCalled();
+    c.solicitarFinalizacion();
+    c.continuar();
+    await dejarResolver();
+    expect(finalizar).toHaveBeenCalledTimes(1);
+    const estado = c.obtenerEstado();
+    expect(estado).toMatchObject({
+      fase: 'finalizada',
+      evaluacionId: id,
+      subpruebasAplicadas: 1,
+      estadoResultado: 'PENDIENTE_VALIDACION',
+    });
+    expect(estado).not.toHaveProperty('factores');
+    expect(estado.fase === 'finalizada' && estado.fechaFin).toBeTruthy();
+  });
+
   it('TC-GEN-04-009: un doble clic en finalizar envía una sola solicitud', async () => {
     const { api, id } = await evaluacionNueva({}, ['VOC1']);
     const c = await cargado(api, id);
