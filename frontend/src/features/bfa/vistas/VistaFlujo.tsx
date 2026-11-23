@@ -1,4 +1,5 @@
 import { AnswerOption } from '../../../components/AnswerOption';
+import { CREDITO_ESPACIAL, RUTA_ESPACIAL } from '../espacial/material';
 import { Figura } from '../components/Figura';
 import { FluidezVerbal } from '../components/FluidezVerbal';
 import { TestScreen } from '../../../components/TestScreen';
@@ -317,7 +318,12 @@ function VistaEjecucion({
       options={opciones}
       questionResource={
         pregunta.recursoUrl ? (
-          <Figura rol="estimulo" src={pregunta.recursoUrl} alt="Figura del ítem" />
+          <>
+            <Figura rol="estimulo" src={pregunta.recursoUrl} alt="Figura del ítem" />
+            {pregunta.recursoUrl.startsWith(RUTA_ESPACIAL) && (
+              <small className="figura-credito">{CREDITO_ESPACIAL}</small>
+            )}
+          </>
         ) : undefined
       }
       selectedOption={estado.respuestas[pregunta.id] ?? null}
