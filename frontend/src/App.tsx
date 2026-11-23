@@ -7,6 +7,7 @@ import { Ui04Preview } from './dev/Ui04Preview';
 import { Ui05Preview } from './dev/Ui05Preview';
 import { SesionProveedor } from './features/acceso/SesionProveedor';
 import { rutasAcceso } from './features/acceso/rutas';
+import { rutasAdministracion } from './features/administracion/rutas';
 import { rutasBfa } from './features/bfa/rutas';
 import { rutasCatalogo } from './features/catalog/rutas';
 import { rutasEvaluacion } from './features/evaluacion/rutas';
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       ...rutasAcceso,
       ...rutasBfa,
       ...rutasWeill,
+      ...rutasAdministracion,
     ],
   },
   // Vista previa de UI-01 (contenido demostrativo).
