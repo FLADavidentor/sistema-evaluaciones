@@ -49,3 +49,7 @@ export function primerPendiente(items: ItemsLocales): number {
     if (itemLocal(items, orden).pieza === null) return orden;
   return TOTAL_ITEMS;
 }
+
+/** Hay guardados sin confirmar: no se debe finalizar todavía. */
+export const hayGuardando = (items: ItemsLocales) =>
+  Object.values(items).some((i) => i.estado === 'guardando');

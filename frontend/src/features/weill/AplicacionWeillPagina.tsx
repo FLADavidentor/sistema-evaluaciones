@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { AnswerOption } from '../../components/AnswerOption';
 import { clienteWeill } from './cliente';
 import { FiguraWeill, PiezaWeill } from './figuras';
@@ -8,6 +8,7 @@ import { mensajeError } from './mensajes';
 import {
   contarGuardados,
   desdeServidor,
+  hayGuardando,
   itemLocal,
   primerPendiente,
   resolver,
@@ -32,6 +33,10 @@ export function AplicacionWeillPagina() {
   const [carga, setCarga] = useState<Carga>({ fase: 'cargando' });
   const [items, setItems] = useState<ItemsLocales>({});
   const [orden, setOrden] = useState(1);
+  const [confirmando, setConfirmando] = useState(false);
+  const [finalizando, setFinalizando] = useState(false);
+  const [errorFinal, setErrorFinal] = useState<string | null>(null);
+  const navegar = useNavigate();
 
   const cargar = useCallback(() => {
     setCarga({ fase: 'cargando' });
@@ -60,10 +65,23 @@ export function AplicacionWeillPagina() {
   );
 
   const activo = carga.fase === 'listo' && carga.intento.estado === 'EN_CURSO';
+  const constancia = `/weill/intentos/${intentoId}/constancia`;
+
+  const finalizar = async () => {
+    setFinalizando(true);
+    setErrorFinal(null);
+    try {
+      await clienteWeill.finalizarIntento(intentoId);
+      void navegar(constancia, { replace: true });
+    } catch (e) {
+      setErrorFinal(mensajeError(e));
+      setFinalizando(false);
+    }
+  };
 
   // Teclas 1–8 eligen la pieza del ítem visible.
   useEffect(() => {
-    if (!activo) return;
+    if (!activo || confirmando) return;
     const alPulsar = (evento: KeyboardEvent) => {
       if (evento.ctrlKey || evento.metaKey || evento.altKey) return;
       const pieza = Number(evento.key);
@@ -74,7 +92,7 @@ export function AplicacionWeillPagina() {
     };
     window.addEventListener('keydown', alPulsar);
     return () => window.removeEventListener('keydown', alPulsar);
-  }, [activo, guardar, orden]);
+  }, [activo, confirmando, guardar, orden]);
 
   if (carga.fase === 'cargando') return <p role="status">Cargando el intento…</p>;
   if (carga.fase === 'error')
@@ -88,16 +106,14 @@ export function AplicacionWeillPagina() {
     );
 
   const { intento } = carga;
-  if (!activo)
-    return (
-      <p role="status">
-        Este intento ya fue finalizado y no admite cambios. <Link to="/weill">Volver</Link>
-      </p>
-    );
+  // Finalizado: las respuestas quedan bloqueadas.
+  if (!activo) return <Navigate to={constancia} replace />;
 
   const item = itemLocal(items, orden);
   const { lamina, posicion } = ubicarItem(orden);
   const respondidos = contarGuardados(items);
+  const omitidos = TOTAL_ITEMS - respondidos;
+  const ocupado = hayGuardando(items);
 
   return (
     <section className="test-paper weill-aplicacion" aria-labelledby="weill-item-titulo">
@@ -142,6 +158,49 @@ export function AplicacionWeillPagina() {
         </div>
       </div>
 
+      {confirmando && (
+        <div
+          className="weill-confirmar"
+          role="alertdialog"
+          aria-modal="false"
+          aria-labelledby="weill-confirmar-titulo"
+          aria-describedby="weill-confirmar-texto"
+        >
+          <h2 id="weill-confirmar-titulo">¿Finalizar la prueba?</h2>
+          <p id="weill-confirmar-texto">
+            {omitidos === 0
+              ? 'Respondió todos los ítems.'
+              : `Quedan ${omitidos} ${omitidos === 1 ? 'ítem' : 'ítems'} sin responder; se registrarán como omitidos.`}{' '}
+            Después de finalizar no podrá cambiar sus respuestas.
+          </p>
+          {ocupado && <p role="status">Esperando a que terminen de guardarse las respuestas…</p>}
+          {errorFinal && (
+            <p className="weill-error" role="alert">
+              {errorFinal}
+            </p>
+          )}
+          <div className="test-actions">
+            <button
+              className="secondary-action"
+              type="button"
+              autoFocus
+              disabled={finalizando}
+              onClick={() => setConfirmando(false)}
+            >
+              Seguir respondiendo
+            </button>
+            <button
+              className="primary-action"
+              type="button"
+              disabled={ocupado || finalizando}
+              onClick={() => void finalizar()}
+            >
+              {finalizando ? 'Finalizando…' : 'Finalizar'}
+            </button>
+          </div>
+        </div>
+      )}
+
       <footer className="test-footer">
         <EstadoItem item={item} onReintentar={() => guardar(orden, item.pieza)} />
         <div className="test-actions">
@@ -163,13 +222,21 @@ export function AplicacionWeillPagina() {
               Anterior
             </button>
           )}
+          {orden < TOTAL_ITEMS && (
+            <button className="primary-action" type="button" onClick={() => setOrden(orden + 1)}>
+              Siguiente
+            </button>
+          )}
           <button
-            className="primary-action"
+            className={orden === TOTAL_ITEMS ? 'primary-action' : 'secondary-action'}
             type="button"
-            disabled={orden === TOTAL_ITEMS}
-            onClick={() => setOrden(orden + 1)}
+            disabled={confirmando}
+            onClick={() => {
+              setErrorFinal(null);
+              setConfirmando(true);
+            }}
           >
-            Siguiente
+            Finalizar
           </button>
         </div>
       </footer>

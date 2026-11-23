@@ -125,3 +125,33 @@
   outline: 3px solid var(--test-secondary);
   outline-offset: 3px;
 }
+
+.weill-confirmar {
+  margin: 0 1rem 1rem;
+  padding: 1rem;
+  border: 2px solid var(--test-ink);
+}
+
+.weill-confirmar h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.weill-confirmar p {
+  margin: 0 0 0.75rem;
+}
+
+.weill-datos {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1.25rem;
+  margin: 0;
+}
+
+.weill-datos dt {
+  color: var(--test-secondary);
+}
+
+.weill-datos dd {
+  margin: 0;
+}
