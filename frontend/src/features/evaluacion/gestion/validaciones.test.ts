@@ -3,7 +3,9 @@ import { validarPeriodo, validarSujeto } from './validaciones';
 
 describe('validaciones de gestión', () => {
   it('sujeto: exige identificador, nombres y apellidos; la fecha es opcional', () => {
-    expect(validarSujeto({ identificadorInstitucional: ' ', nombres: '', apellidos: 'Ruiz' })).toEqual({
+    expect(
+      validarSujeto({ identificadorInstitucional: ' ', nombres: '', apellidos: 'Ruiz' }),
+    ).toEqual({
       identificadorInstitucional: 'Es obligatorio.',
       nombres: 'Es obligatorio.',
     });

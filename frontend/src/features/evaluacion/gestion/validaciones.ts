@@ -20,6 +20,7 @@ export function validarPeriodo(v: PeriodoRequest): Errores<PeriodoRequest> {
   if (!v.denominacion.trim()) errores.denominacion = FALTA;
   if (!v.inicio) errores.inicio = FALTA;
   if (!v.fin) errores.fin = FALTA;
-  if (v.inicio && v.fin && v.inicio > v.fin) errores.fin = 'El fin no puede ser anterior al inicio.';
+  if (v.inicio && v.fin && v.inicio > v.fin)
+    errores.fin = 'El fin no puede ser anterior al inicio.';
   return errores;
 }

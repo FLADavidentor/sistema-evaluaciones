@@ -1,4 +1,9 @@
-import type { EstadoEvaluacion, EvaluacionResponse, PeriodoResponse, SujetoResponse } from '../tipos';
+import type {
+  EstadoEvaluacion,
+  EvaluacionResponse,
+  PeriodoResponse,
+  SujetoResponse,
+} from '../tipos';
 
 // Tipos de GEN-02-FE (gestión) según DOC-05: E18–E23.
 

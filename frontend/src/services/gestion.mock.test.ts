@@ -28,12 +28,19 @@ describe('mock de gestión (E18–E23)', () => {
   it('E20/E21 crean y listan períodos; valida duplicado e inicio posterior al fin', async () => {
     const c = cliente();
     const antes = (await c.listarPeriodos()).length;
-    const p = { codigo: '2027-2', denominacion: 'Segundo semestre 2027', inicio: '2027-08-01', fin: '2027-12-15' };
+    const p = {
+      codigo: '2027-2',
+      denominacion: 'Segundo semestre 2027',
+      inicio: '2027-08-01',
+      fin: '2027-12-15',
+    };
     await c.crearPeriodo(p);
     expect(await c.listarPeriodos()).toHaveLength(antes + 1);
     expect(await codigoDe(c.crearPeriodo(p))).toBe('PERIODO_DUPLICADO');
     expect(
-      await codigoDe(c.crearPeriodo({ ...p, codigo: 'X', inicio: '2028-01-01', fin: '2027-01-01' })),
+      await codigoDe(
+        c.crearPeriodo({ ...p, codigo: 'X', inicio: '2028-01-01', fin: '2027-01-01' }),
+      ),
     ).toBe('PERIODO_INVALIDO');
   });
 

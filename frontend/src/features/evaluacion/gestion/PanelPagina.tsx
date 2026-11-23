@@ -63,7 +63,9 @@ export function PanelPagina() {
     <div className="ev-pagina">
       <header className="ev-pagina-cabecera">
         <h1>Panel del profesional</h1>
-        <p>Evaluaciones de su alcance. Continúe las que están en curso o consulte los resultados.</p>
+        <p>
+          Evaluaciones de su alcance. Continúe las que están en curso o consulte los resultados.
+        </p>
       </header>
       <div className="ev-campo gestion-filtro">
         <label htmlFor="panel-estado">Estado</label>
