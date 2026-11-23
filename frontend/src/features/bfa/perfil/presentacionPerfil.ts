@@ -55,3 +55,7 @@ export function resumirPerfil(factores: ResultadoFactor[]): ResumenPerfil {
     parcial: calculados < CODIGOS_PERFIL.length,
   };
 }
+
+/** E9 no informa el test: se reconoce un resultado BFA porque todos sus códigos son del catálogo BFA. */
+export const esResultadoBfa = (factores: ResultadoFactor[]): boolean =>
+  factores.length > 0 && factores.every((f) => CODIGOS_PERFIL.includes(f.codigo));
