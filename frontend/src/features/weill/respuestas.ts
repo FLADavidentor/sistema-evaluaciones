@@ -53,3 +53,7 @@ export function primerPendiente(items: ItemsLocales): number {
 /** Hay guardados sin confirmar: no se debe finalizar todavía. */
 export const hayGuardando = (items: ItemsLocales) =>
   Object.values(items).some((i) => i.estado === 'guardando');
+
+/** Ítems cuya respuesta no se pudo guardar: impiden finalizar hasta reintentar. */
+export const contarConError = (items: ItemsLocales) =>
+  Object.values(items).filter((i) => i.estado === 'error').length;

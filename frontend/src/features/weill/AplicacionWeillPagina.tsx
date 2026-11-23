@@ -6,6 +6,7 @@ import { FiguraWeill, PiezaWeill } from './figuras';
 import { ubicarItem } from './items';
 import { mensajeError } from './mensajes';
 import {
+  contarConError,
   contarGuardados,
   desdeServidor,
   hayGuardando,
@@ -114,6 +115,7 @@ export function AplicacionWeillPagina() {
   const respondidos = contarGuardados(items);
   const omitidos = TOTAL_ITEMS - respondidos;
   const ocupado = hayGuardando(items);
+  const conError = contarConError(items);
 
   return (
     <section className="test-paper weill-aplicacion" aria-labelledby="weill-item-titulo">
@@ -174,6 +176,13 @@ export function AplicacionWeillPagina() {
             Después de finalizar no podrá cambiar sus respuestas.
           </p>
           {ocupado && <p role="status">Esperando a que terminen de guardarse las respuestas…</p>}
+          {conError > 0 && (
+            <p className="weill-error" role="alert">
+              {conError === 1
+                ? '1 respuesta no se guardó; vuelva a ese ítem y reintente antes de finalizar.'
+                : `${conError} respuestas no se guardaron; vuelva a esos ítems y reintente antes de finalizar.`}
+            </p>
+          )}
           {errorFinal && (
             <p className="weill-error" role="alert">
               {errorFinal}
@@ -192,7 +201,7 @@ export function AplicacionWeillPagina() {
             <button
               className="primary-action"
               type="button"
-              disabled={ocupado || finalizando}
+              disabled={ocupado || conError > 0 || finalizando}
               onClick={() => void finalizar()}
             >
               {finalizando ? 'Finalizando…' : 'Finalizar'}
