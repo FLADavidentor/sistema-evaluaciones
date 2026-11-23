@@ -19,6 +19,8 @@ interface ConsultaResultadosProps extends Pick<TablaFactoresProps, 'etiquetaFact
   datosSimulados?: boolean;
   /** Vista específica de un test (p. ej. el perfil BFA); si devuelve null se usa la general. */
   vista?: (resultado: ResultadoResponse, datosSimulados: boolean) => ReactNode;
+  /** Contenido extra bajo el resultado (p. ej. enlaces de la vista profesional). */
+  acciones?: (resultado: ResultadoResponse) => ReactNode;
 }
 
 /** Buscador por ID + estados de carga, error y resultado de E9. */
@@ -27,6 +29,7 @@ export function ConsultaResultados({
   cliente,
   datosSimulados = usaMocksResultados && !cliente,
   vista,
+  acciones,
   etiquetaFactor,
 }: ConsultaResultadosProps) {
   const id = useId();
@@ -101,6 +104,7 @@ export function ConsultaResultados({
             onReintentar={consultado !== null ? () => void ejecutar(consultado) : undefined}
           />
         ))}
+      {estado.fase === 'exito' && acciones?.(estado.datos)}
       {estado.fase === 'exito' &&
         (vista?.(estado.datos, datosSimulados) ?? (
           <VistaResultado

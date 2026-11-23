@@ -1,13 +1,15 @@
 import { ApiError } from '../../../services/http';
 import type { ClienteResultados, ResultadoFactor, ResultadoResponse } from '../../resultados/tipos';
+import { revisionSimuladaDe, type RevisionSimulada } from '../../../services/revision.mock';
 import type { BfaApi } from '../api/bfaApi';
+import { BfaApiSimulada } from '../api/bfaApiSimulada';
 import type { EvaluacionResponse, TestDetalle } from '../api/tipos';
 import { CODIGOS_PERFIL } from './catalogo';
 
 /**
  * E9 simulado para una evaluación de la API simulada de BFA (BFA-FE-08).
  * Hace de servidor: los valores son FICTICIOS y deterministas, no conversiones de un baremo.
- * Supone que la revisión ya se validó y publicó (E12) para poder mostrar el perfil.
+ * Hasta que la revisión se valida y publica (E12, BFA-FE-09) responde PENDIENTE_VALIDACION sin factores.
  */
 
 // Totales y compuestos con sus componentes (Documento BFA §2.5); solo los usa la simulación.
@@ -78,6 +80,7 @@ const PERCENTILES = [20, 35, 45, 50, 60, 70, 80, 90];
 export function resultadoBfaSimulado(
   evaluacion: EvaluacionResponse,
   test: TestDetalle,
+  revision = 1,
 ): ResultadoResponse {
   const aplicadas = new Set(evaluacion.subpruebas.map((s) => s.codigo));
   const pd = new Map<string, number>();
@@ -141,13 +144,27 @@ export function resultadoBfaSimulado(
     estadoResultado: 'DISPONIBLE',
     versionFormularioId: evaluacion.versionFormularioId ?? test.versionFormularioId,
     calificacionId: 900 + evaluacion.id,
-    revision: 1,
+    revision,
     versionReglas: 'BFA-REGLAS-SIM',
     idClave: 1,
     idBaremo: 1,
     factores: CODIGOS_PERFIL.flatMap((c) => factores.get(c) ?? []),
   };
 }
+
+/** E9 de una evaluación finalizada cuya revisión aún no se publicó. */
+export const resultadoPendienteSimulado = (evaluacion: EvaluacionResponse): ResultadoResponse => ({
+  evaluacionId: evaluacion.id,
+  resultadoId: evaluacion.resultadoId ?? evaluacion.id,
+  estadoResultado: 'PENDIENTE_VALIDACION',
+  versionFormularioId: evaluacion.versionFormularioId ?? null,
+  calificacionId: null,
+  revision: null,
+  versionReglas: null,
+  idClave: null,
+  idBaremo: null,
+  factores: [],
+});
 
 /**
  * Cliente de E9 para la demostración: si la evaluación existe en la API simulada de BFA,
@@ -156,6 +173,9 @@ export function resultadoBfaSimulado(
 export function crearClienteResultadosBfa(
   api: BfaApi,
   respaldo: ClienteResultados,
+  revision: Pick<RevisionSimulada, 'revisionVigente'> | undefined = api instanceof BfaApiSimulada
+    ? revisionSimuladaDe(api)
+    : undefined,
 ): ClienteResultados {
   return {
     async obtenerResultado(evaluacionId) {
@@ -176,7 +196,9 @@ export function crearClienteResultadosBfa(
           ruta: `/api/v1/evaluaciones/${evaluacionId}/resultados`,
         });
       }
-      return resultadoBfaSimulado(evaluacion, await api.obtenerTest(evaluacion.testId));
+      const vigente = (await revision?.revisionVigente(evaluacionId)) ?? null;
+      if (vigente === null) return resultadoPendienteSimulado(evaluacion);
+      return resultadoBfaSimulado(evaluacion, await api.obtenerTest(evaluacion.testId), vigente);
     },
   };
 }
