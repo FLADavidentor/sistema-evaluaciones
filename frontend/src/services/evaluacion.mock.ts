@@ -52,7 +52,7 @@ const subprueba = (
  * Documento BFA §5.3, tabla de las 13 subpruebas (y §2.6 para tiempos).
  * 0 preguntas u opciones null = no definido en la fuente.
  */
-const TEST_BFA: TestDetalleResponse = {
+export const TEST_BFA: TestDetalleResponse = {
   id: 1,
   codigo: 'BFA',
   nombre: 'Batería Factorial de Aptitudes',
@@ -154,7 +154,7 @@ const evaluacionesIniciales = (): EvaluacionResponse[] => [
 
 // ---------- Ayudas ----------
 
-function fallar(
+export function fallar(
   status: number,
   codigo: string,
   mensaje: string,
@@ -172,12 +172,12 @@ function fallar(
 }
 
 /** Igual que fetch cuando no hay red: TypeError. */
-function fallarConexion(): never {
+export function fallarConexion(): never {
   throw new TypeError('Failed to fetch');
 }
 
 /** Escenarios comunes por ID de prueba (403, 500, 503). */
-function escenarioPorId(id: number, ruta: string): void {
+export function escenarioPorId(id: number, ruta: string): void {
   if (id === 503) fallarConexion();
   if (id === 403) fallar(403, 'SIN_PERMISO', 'No tiene permiso para este recurso.', ruta);
   if (id === 500) fallar(500, 'ERROR_INTERNO', 'Ocurrió un error inesperado.', ruta);
