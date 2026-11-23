@@ -935,3 +935,42 @@ button {
     padding: 1rem;
   }
 }
+
+.app-nav {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem clamp(1rem, 3vw, 1.5rem);
+  background: var(--test-paper);
+  border-bottom: 1px solid var(--test-line);
+}
+
+.app-nav a {
+  padding: 0.45rem 0.8rem;
+  color: var(--test-secondary);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.app-nav a:hover,
+.app-nav a.active {
+  color: var(--uam-action);
+  background: #eef7f8;
+}
+
+.app-nav a:focus-visible,
+.catalog-start:focus-visible {
+  outline: 3px solid var(--test-ink);
+  outline-offset: 2px;
+}
+
+.catalog-start {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--uam-action);
+  border-radius: 6px;
+}
