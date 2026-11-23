@@ -18,11 +18,22 @@ export class ApiError extends Error {
   }
 }
 
+let token: string | null = null;
+
+/** Token de la sesión abierta (E14); se envía como Bearer en las demás llamadas. */
+export function establecerToken(nuevo: string | null) {
+  token = nuevo;
+}
+
 /** Única puerta a la API: rutas relativas a /api/v1 y JSON en ambos sentidos. */
 export async function http<T>(ruta: string, opciones: RequestInit = {}): Promise<T> {
   const respuesta = await fetch(`/api/v1${ruta}`, {
     ...opciones,
-    headers: { 'Content-Type': 'application/json', ...opciones.headers },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...opciones.headers,
+    },
   });
   const cuerpo =
     respuesta.status === 204 ? undefined : await respuesta.json().catch(() => undefined);
