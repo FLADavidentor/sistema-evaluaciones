@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { OptionsLayout, PromptVariant } from '../../components/TestScreen';
 import { renderEnunciadoRazonamiento, renderOpcionRazonamiento } from './razonamiento/render';
+import { renderTextoVerbal } from './verbal/render';
 
 /**
  * Cómo se presenta cada subprueba dentro del flujo general. Las familias del BFA se enchufan aquí
@@ -42,6 +43,7 @@ const base = (parcial: Partial<PresentacionSubprueba>): PresentacionSubprueba =>
 });
 
 const figuras = { promptVariant: 'hidden', optionsLayout: 'figures' } as const;
+const verbal = { renderEnunciado: renderTextoVerbal, renderOpcion: renderTextoVerbal } as const;
 const operacionBinaria = {
   promptVariant: 'display',
   optionsLayout: 'binary',
@@ -49,8 +51,8 @@ const operacionBinaria = {
 } as const;
 
 export const presentacionPorSubprueba: Record<string, PresentacionSubprueba> = {
-  VOC1: base({ promptVariant: 'display' }),
-  VOC2: base({ promptVariant: 'statement', optionsLayout: 'compact' }),
+  VOC1: base({ promptVariant: 'display', ...verbal }),
+  VOC2: base({ promptVariant: 'statement', optionsLayout: 'compact', ...verbal }),
   S1: base(figuras),
   S2: base(figuras),
   S1b: base(figuras),
@@ -66,7 +68,7 @@ export const presentacionPorSubprueba: Record<string, PresentacionSubprueba> = {
     renderEnunciado: renderEnunciadoRazonamiento,
     renderOpcion: renderOpcionRazonamiento,
   }),
-  CV: base({ promptVariant: 'statement' }),
+  CV: base({ promptVariant: 'statement', ...verbal }),
   'N1-A': base(operacionBinaria),
   'N1-B': base(operacionBinaria),
   'N2-A': base({ promptVariant: 'display', optionsLayout: 'compact', numeric: true }),
