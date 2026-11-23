@@ -74,6 +74,10 @@ El hueco puede ser `___`, `[ ]`, `( )`, `□` o un `?` suelto. Si el formato rea
 
 S1, S2 y S1b muestran el estímulo y las alternativas como figuras (`recursoUrl` de E6) con el diseño de UI-04: enunciado oculto y alternativas en cuadrícula. En la API simulada, `espacial/` genera figuras sintéticas **ficticias** (polígonos girados o reflejados y pilas de cubos) como data URL; no son reactivos del BFA. Verlo: `/bfa?subpruebas=S1,S2,S1b&tiempo=60`.
 
+### Verbal (BFA-FE-03)
+
+VOC1 (palabra en mayúsculas, 5 alternativas en lista), VOC2 (bloque de 5 palabras compacto, numeración 41 en adelante) y CV (sentencia y 3 interpretaciones) se dibujan con `verbal/TextoVerbal`: texto exacto, `lang="es"` y `translate="no"`. La API simulada usa palabras y sentencias **ficticias** de `verbal/material.ts`; no son reactivos del BFA. Verlo: `/bfa?subpruebas=VOC1,VOC2,CV&tiempo=60`.
+
 ### Contrato (DOC-05)
 
 Verificado contra `docs/api/openapi.yaml` del PR #37 (aún sin fusionar; su encabezado lo presenta como contrato aprobado). Confirmado: rutas y métodos de E1–E8 y E24; `opcion` es la letra de E6; `recursoUrl` viene en la pregunta y en cada opción; FV usa `palabras` con `ordenEntrada` en E6 y E7; estados `PENDIENTE / ACTIVA / CERRADA`; `versionFormularioId` en E2 y E4 (E3 la exige, se toma de E2); formato de error común. Las instrucciones y los ejemplos de práctica se leen de E24; mientras el backend no la implemente (`RUTA_NO_ENCONTRADA`) se usan textos provisionales, y cualquier otro error se informa.

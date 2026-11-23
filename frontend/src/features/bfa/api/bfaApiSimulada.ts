@@ -1,5 +1,6 @@
 import { ApiError } from '../../../services/http';
 import { MATERIAL_ESPACIAL } from '../espacial/material';
+import { MATERIAL_VERBAL } from '../verbal/material';
 import type { BfaApi } from './bfaApi';
 import type {
   AvanceSubpruebaResponse,
@@ -165,6 +166,7 @@ const EJEMPLOS_R2: [string, string[]][] = [
 ];
 
 const EJEMPLOS_POR_SUBPRUEBA: Record<string, [string, string[]][]> = {
+  ...MATERIAL_VERBAL,
   R1: EJEMPLOS_R1,
   R2: EJEMPLOS_R2,
 };
